@@ -196,7 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
             this.speedX = Math.random() * 8 - 4;
             this.speedY = Math.random() * -8 - 2; // 上方向へ噴射
             this.gravity = 0.18;
-            this.color = `hsl(${Math.random() * 60 + 260}, 100%, 75%)`; // 紫〜青〜ピンク系
+            const colors = ['#ff5e97', '#39b5ff', '#ffd000', '#2bd980', '#a855f7'];
+            this.color = colors[Math.floor(Math.random() * colors.length)];
             this.alpha = 1;
             this.decay = Math.random() * 0.015 + 0.01;
         }

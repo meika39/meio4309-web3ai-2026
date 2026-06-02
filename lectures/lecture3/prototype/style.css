@@ -1,28 +1,33 @@
 /* ==========================================================================
-   CalmTask - Premium Design System (Glassmorphism & Deep Dark Indigo)
+   CalmTask v3 - Pop Flat & Bold Border (Neo-Brutalism Style)
    ========================================================================== */
 
-/* 変数定義（洗練されたカラーパレット） */
+/* 変数定義（イラストから抽出したパステル＆ビビッドな配色） */
 :root {
-    --bg-gradient-start: #070714;
-    --bg-gradient-end: #0f0c24;
-    --primary-color: #6366f1; /* インディゴ */
-    --primary-glow: rgba(99, 102, 241, 0.4);
-    --secondary-color: #a855f7; /* パープル */
-    --accent-color: #38bdf8; /* スカイブルー (ゆるサポート用) */
-    --success-color: #10b981; /* エメラルドグリーン (できた！ボタン) */
-    --success-glow: rgba(16, 185, 129, 0.4);
+    --bg-primary: #f5f4ef; /* イラストの背景のような柔らかいウォームベージュ */
+    --border-color: #1a1a1a; /* 太い黒枠線 */
+    --card-bg: #ffffff;
     
-    --text-primary: #f8fafc;
-    --text-muted: #94a3b8;
-    --text-dim: #64748b;
+    --color-pink: #ff5e97;    /* マゼンタピンク */
+    --color-blue: #39b5ff;    /* スカイブルー */
+    --color-yellow: #ffd000;  /* 鮮やかなイエロー */
+    --color-green: #2bd980;   /* エメラルドグリーン */
+    --color-purple: #a855f7;  /* パープル */
     
-    --glass-bg: rgba(255, 255, 255, 0.03);
-    --glass-border: rgba(255, 255, 255, 0.08);
-    --glass-highlight: rgba(255, 255, 255, 0.05);
+    --text-primary: #1a1a1a;
+    --text-muted: #5e6b7e;
+    --text-dim: #7f8c8d;
     
-    --font-sans: 'Outfit', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
-    --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    --font-sans: 'Quicksand', 'Outfit', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+    
+    /* ネオブロータリズムの主要な定義 */
+    --neo-border-thick: 3px solid var(--border-color);
+    --neo-border-medium: 2px solid var(--border-color);
+    --neo-shadow: 6px 6px 0px var(--border-color);
+    --neo-shadow-sm: 4px 4px 0px var(--border-color);
+    --neo-shadow-active: 2px 2px 0px var(--border-color);
+    
+    --transition-bounce: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.175);
 }
 
 /* 全体のリセット & ベース */
@@ -34,8 +39,11 @@
 
 body {
     font-family: var(--font-sans);
-    background-color: var(--bg-gradient-start);
-    background-image: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    background-color: var(--bg-primary);
+    /* イラスト調のドット背景パターン */
+    background-image: radial-gradient(var(--border-color) 1.5px, transparent 1.5px);
+    background-size: 24px 24px;
+    background-position: 0 0;
     color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
@@ -57,64 +65,15 @@ body {
     z-index: 10;
 }
 
-/* 動く背景の光の球 (オーブ) */
+/* 不要になったダークテーマ用のオーブを非表示に（HTMLはそのまま） */
 .background-orbs {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    z-index: 0;
-    pointer-events: none;
-}
-
-.orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.15;
-    animation: floatOrb 20s infinite alternate ease-in-out;
-}
-
-.orb-1 {
-    width: 500px;
-    height: 500px;
-    background: var(--primary-color);
-    top: -10%;
-    left: -10%;
-    animation-duration: 25s;
-}
-
-.orb-2 {
-    width: 600px;
-    height: 600px;
-    background: var(--secondary-color);
-    bottom: -15%;
-    right: -10%;
-    animation-duration: 30s;
-    animation-delay: -5s;
-}
-
-.orb-3 {
-    width: 400px;
-    height: 400px;
-    background: var(--accent-color);
-    top: 40%;
-    left: 50%;
-    animation-duration: 20s;
-    animation-delay: -10s;
-}
-
-@keyframes floatOrb {
-    0% { transform: translate(0, 0) scale(1); }
-    100% { transform: translate(80px, 50px) scale(1.1); }
+    display: none;
 }
 
 /* アプリケーションコンテナ */
 .app-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 900px;
     padding: 40px 20px;
     position: relative;
     z-index: 1;
@@ -123,40 +82,32 @@ body {
     gap: 30px;
 }
 
-/* 磨りガラス風パネル (共通ユーティリティ) */
+/* ガラスパネルから「ポップ・ブロータリズム・パネル」へ大改造 */
 .glass-panel {
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: 24px;
+    background: var(--card-bg);
+    border: var(--neo-border-thick);
+    border-radius: 20px;
     padding: 30px;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    transition: var(--transition-smooth);
+    box-shadow: var(--neo-shadow);
+    transition: var(--transition-bounce);
     position: relative;
     overflow: hidden;
 }
 
+/* 斜めの光沢を削除し、手描き風の楽しげな幾何学模様を敷く */
 .glass-panel::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 100%);
-    pointer-events: none;
+    display: none;
 }
 
 .glass-panel:hover {
-    border-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+    transform: translate(-2px, -2px);
+    box-shadow: 8px 8px 0px var(--border-color);
 }
 
 /* ヘッダー */
 .app-header {
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 .logo {
@@ -168,35 +119,48 @@ body {
 }
 
 .logo-icon {
-    font-size: 2.2rem;
-    filter: drop-shadow(0 0 10px var(--primary-glow));
-    animation: pulseIcon 3s infinite ease-in-out;
+    font-size: 2.5rem;
+    animation: rotateIcon 4s infinite linear;
+    display: inline-block;
 }
 
-@keyframes pulseIcon {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.1); }
+@keyframes rotateIcon {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(10deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-10deg); }
+    100% { transform: rotate(0deg); }
 }
 
 .logo h1 {
-    font-family: 'Outfit', sans-serif;
-    font-size: 2.8rem;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    background: linear-gradient(to right, #ffffff, #a855f7, #6366f1);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 3.2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    position: relative;
+    /* 手書き風に少し傾斜をあたえる */
+    transform: rotate(-1deg);
+    text-shadow: 2px 2px 0px var(--color-yellow), -2px -2px 0px var(--color-pink);
 }
 
 .subtitle {
     font-size: 1.05rem;
     color: var(--text-muted);
-    font-weight: 300;
+    font-weight: 600;
+    background: var(--color-yellow);
+    display: inline-block;
+    padding: 4px 12px;
+    border: var(--neo-border-medium);
+    border-radius: 8px;
+    transform: rotate(1deg);
+    box-shadow: var(--neo-shadow-sm);
+    margin-top: 10px;
 }
 
 /* 進捗バーセクション */
 .progress-section {
     padding: 20px 30px;
+    border-color: var(--border-color);
 }
 
 .progress-info {
@@ -207,182 +171,183 @@ body {
 }
 
 .progress-label {
-    font-size: 0.9rem;
-    font-weight: 500;
-    color: var(--text-muted);
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-primary);
     letter-spacing: 0.5px;
 }
 
 .progress-percentage {
-    font-family: 'Outfit', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 600;
-    color: var(--primary-color);
-    text-shadow: 0 0 15px var(--primary-glow);
-    transition: var(--transition-smooth);
+    font-family: 'Quicksand', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--color-pink);
 }
 
 .progress-bar-container {
     width: 100%;
-    height: 8px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 999px;
+    height: 16px;
+    background: #ffffff;
+    border: var(--neo-border-medium);
+    border-radius: 99px;
     overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .progress-bar {
     width: 0%;
     height: 100%;
-    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-    border-radius: 999px;
-    box-shadow: 0 0 10px var(--primary-glow);
+    background: var(--color-green);
+    border-radius: 99px;
+    border-right: var(--neo-border-medium);
     transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .progress-stats {
     margin-top: 8px;
-    font-size: 0.85rem;
-    color: var(--text-dim);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-muted);
     text-align: right;
 }
 
 /* インプットセクション */
 .input-section h2 {
-    font-size: 1.4rem;
-    font-weight: 600;
+    font-size: 1.5rem;
+    font-weight: 700;
     margin-bottom: 8px;
     letter-spacing: -0.3px;
 }
 
 .input-desc {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     color: var(--text-muted);
     margin-bottom: 24px;
 }
 
 .input-group {
     display: flex;
-    gap: 12px;
+    gap: 16px;
     width: 100%;
     margin-bottom: 20px;
 }
 
 #taskInput {
     flex: 1;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 16px;
+    background: #ffffff;
+    border: var(--neo-border-thick);
+    border-radius: 14px;
     padding: 16px 20px;
-    font-size: 1rem;
-    color: white;
+    font-size: 1.05rem;
+    color: var(--text-primary);
     font-family: inherit;
-    transition: var(--transition-smooth);
+    font-weight: 600;
+    transition: var(--transition-bounce);
+    box-shadow: var(--neo-shadow-sm);
 }
 
 #taskInput:focus {
     outline: none;
-    border-color: var(--primary-color);
-    background: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 0 0 4px var(--primary-glow);
+    transform: translate(2px, 2px);
+    box-shadow: var(--neo-shadow-active);
+    background: #fffdf5;
 }
 
-/* ボタン基本定義 */
+/* ネオブロータリズム仕様のボタン定義 */
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 16px 28px;
-    border-radius: 16px;
+    padding: 16px 30px;
+    border-radius: 14px;
     font-size: 1rem;
-    font-weight: 600;
+    font-weight: 700;
     font-family: inherit;
     cursor: pointer;
-    border: none;
-    transition: var(--transition-smooth);
+    border: var(--neo-border-thick);
+    box-shadow: var(--neo-shadow-sm);
+    transition: var(--transition-bounce);
+    color: var(--text-primary);
+}
+
+.btn:active {
+    transform: translate(4px, 4px) !important;
+    box-shadow: var(--neo-shadow-active) !important;
 }
 
 .btn-primary {
-    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
-    color: white;
-    box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+    background: var(--color-pink);
 }
 
 .btn-primary:hover {
+    background: #ff4081;
     transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(99, 102, 241, 0.5);
-    filter: brightness(1.1);
+    box-shadow: var(--neo-shadow);
 }
 
 .btn-secondary {
-    background: rgba(255, 255, 255, 0.08);
-    color: white;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--color-blue);
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: #25a5f0;
+    transform: translateY(-2px);
+    box-shadow: var(--neo-shadow);
 }
 
 .btn-outline {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    color: var(--text-muted);
+    background: #ffffff;
 }
 
 .btn-outline:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: white;
-    border-color: white;
+    background: #f7f7f7;
+    transform: translateY(-2px);
+    box-shadow: var(--neo-shadow);
 }
 
 .btn-success {
-    background: linear-gradient(to right, #059669, #10b981);
-    color: white;
-    box-shadow: 0 4px 20px var(--success-glow);
+    background: var(--color-green);
 }
 
 .btn-success:hover {
+    background: #22c373;
     transform: translateY(-2px);
-    box-shadow: 0 6px 24px var(--success-glow);
-    filter: brightness(1.1);
+    box-shadow: var(--neo-shadow);
 }
 
 .btn-accent {
-    background: linear-gradient(to right, #0284c7, #38bdf8);
-    color: white;
-    box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+    background: var(--color-yellow);
 }
 
 .btn-accent:hover {
+    background: #f3c200;
     transform: translateY(-1px);
-    box-shadow: 0 6px 18px rgba(56, 189, 248, 0.4);
+    box-shadow: var(--neo-shadow);
 }
 
 .btn-sm {
-    padding: 10px 18px;
+    padding: 10px 20px;
     font-size: 0.85rem;
-    border-radius: 12px;
+    border-radius: 10px;
 }
 
 .btn-text {
     background: none;
     border: none;
-    color: var(--text-dim);
+    color: var(--text-muted);
     font-size: 0.9rem;
+    font-weight: 700;
     cursor: pointer;
-    transition: var(--transition-smooth);
+    transition: var(--transition-bounce);
 }
 
 .btn-text:hover {
-    color: var(--text-muted);
+    color: var(--text-primary);
     text-decoration: underline;
 }
 
 .btn-icon {
-    font-size: 1.15rem;
+    font-size: 1.2rem;
 }
 
 /* プリセット提案 */
@@ -394,25 +359,28 @@ body {
 }
 
 .suggestion-label {
-    font-size: 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 700;
     color: var(--text-dim);
 }
 
 .preset-btn {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: #ffffff;
+    border: var(--neo-border-medium);
     border-radius: 99px;
     padding: 6px 14px;
     font-size: 0.8rem;
-    color: var(--text-muted);
+    font-weight: 700;
+    color: var(--text-primary);
     cursor: pointer;
-    transition: var(--transition-smooth);
+    box-shadow: 2px 2px 0px var(--border-color);
+    transition: var(--transition-bounce);
 }
 
 .preset-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.15);
-    color: white;
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px var(--border-color);
+    background: var(--color-yellow);
 }
 
 /* フォーカスセクション（メインカード画面） */
@@ -425,35 +393,24 @@ body {
     animation: fadeInScale 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes fadeInScale {
-    from {
-        opacity: 0;
-        transform: scale(0.96) translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: scale(1) translateY(0);
-    }
-}
-
 .focus-header {
     display: flex;
     justify-content: space-between;
     width: 100%;
     align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: var(--neo-border-medium);
     padding-bottom: 16px;
 }
 
 .focus-tag {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--text-dim);
-    background: rgba(255, 255, 255, 0.03);
-    padding: 4px 12px;
-    border-radius: 99px;
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    background: var(--color-blue);
+    padding: 6px 14px;
+    border-radius: 8px;
+    border: var(--neo-border-medium);
+    box-shadow: var(--neo-shadow-sm);
     max-width: 70%;
     white-space: nowrap;
     overflow: hidden;
@@ -461,8 +418,8 @@ body {
 }
 
 .focus-card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.01) 0%, rgba(255, 255, 255, 0.03) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #ffffff;
+    border: var(--neo-border-thick);
     border-radius: 20px;
     padding: 40px 30px;
     width: 100%;
@@ -470,30 +427,33 @@ body {
     flex-direction: column;
     align-items: center;
     gap: 16px;
-    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.01);
+    box-shadow: inset 0 0 0 rgba(0, 0, 0, 0);
 }
 
 .step-badge {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--secondary-color);
+    font-size: 0.8rem;
+    font-weight: 800;
+    color: var(--color-pink);
     letter-spacing: 1.5px;
     text-transform: uppercase;
+    background: #ffe3ee;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: var(--neo-border-medium);
 }
 
 .current-step-text {
-    font-size: 1.8rem;
+    font-size: 1.9rem;
     font-weight: 700;
     line-height: 1.4;
-    color: white;
+    color: var(--text-primary);
     letter-spacing: -0.3px;
-    transition: var(--transition-smooth);
 }
 
 .step-subtext {
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: var(--text-muted);
-    font-weight: 300;
+    font-weight: 500;
     max-width: 90%;
 }
 
@@ -504,15 +464,19 @@ body {
     align-items: center;
     gap: 8px;
     margin-top: 5px;
+    background: #fffdf0;
+    border: var(--neo-border-medium);
+    padding: 12px 24px;
+    border-radius: 16px;
+    box-shadow: var(--neo-shadow-sm);
 }
 
 .timer-display {
-    font-family: 'Outfit', sans-serif;
-    font-size: 2.2rem;
-    font-weight: 500;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 2.4rem;
+    font-weight: 700;
     letter-spacing: 1px;
-    color: var(--text-muted);
-    text-shadow: 0 0 10px rgba(255, 255, 255, 0.03);
+    color: var(--text-primary);
 }
 
 .timer-controls {
@@ -535,8 +499,8 @@ body {
 
 /* ゆるサポートメッセージボックス */
 .support-message-box {
-    background: rgba(56, 189, 248, 0.04);
-    border: 1px solid rgba(56, 189, 248, 0.2);
+    background: #ecfaff;
+    border: var(--neo-border-thick);
     border-radius: 16px;
     padding: 20px;
     width: 100%;
@@ -544,29 +508,19 @@ body {
     display: flex;
     flex-direction: column;
     gap: 12px;
+    box-shadow: var(--neo-shadow-sm);
     animation: slideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 #supportMessageText {
-    font-size: 0.9rem;
-    color: #bae6fd;
-    font-weight: 400;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+    font-weight: 600;
     line-height: 1.5;
 }
 
 #supportMessageText::before {
-    content: "💡 ";
+    content: "🌱 ";
 }
 
 /* 詳細セクション（ロードマップ & あゆみ）の横並び */
@@ -589,11 +543,11 @@ body {
 }
 
 .steps-preview-section h3, .history-section h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 1.2rem;
+    font-weight: 700;
     margin-bottom: 16px;
     color: var(--text-primary);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: var(--neo-border-medium);
     padding-bottom: 8px;
 }
 
@@ -609,43 +563,49 @@ body {
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 10px 14px;
-    border-radius: 10px;
-    background: rgba(255, 255, 255, 0.02);
-    font-size: 0.85rem;
+    padding: 12px 14px;
+    border-radius: 12px;
+    background: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 600;
     color: var(--text-muted);
-    border: 1px solid rgba(255, 255, 255, 0.03);
-    transition: var(--transition-smooth);
+    border: var(--neo-border-medium);
+    box-shadow: 2px 2px 0px var(--border-color);
+    transition: var(--transition-bounce);
 }
 
 .steps-list li.current {
-    background: rgba(99, 102, 241, 0.06);
-    border-color: rgba(99, 102, 241, 0.2);
-    color: white;
-    font-weight: 500;
+    background: var(--color-yellow);
+    color: var(--text-primary);
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0px var(--border-color);
 }
 
 .steps-list li.completed {
     text-decoration: line-through;
     opacity: 0.5;
+    background: #f1f3f5;
+    box-shadow: none;
+    transform: none;
 }
 
 .step-num {
-    font-family: 'Outfit', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
-    width: 20px;
-    height: 20px;
+    font-family: 'Quicksand', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.05);
+    background: #f1f3f5;
+    border: var(--neo-border-medium);
     display: flex;
     align-items: center;
     justify-content: center;
+    color: var(--text-primary);
 }
 
 .steps-list li.current .step-num {
-    background: var(--primary-color);
-    box-shadow: 0 0 8px var(--primary-glow);
+    background: #ffffff;
 }
 
 /* あゆみ (履歴) リスト */
@@ -662,18 +622,21 @@ body {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    padding: 8px 12px;
-    border-radius: 8px;
-    background: rgba(16, 185, 129, 0.02);
-    border: 1px solid rgba(16, 185, 129, 0.05);
-    font-size: 0.8rem;
-    color: #a7f3d0;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: #e8fbf3;
+    border: var(--neo-border-medium);
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    box-shadow: 2px 2px 0px var(--border-color);
 }
 
 .history-time {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Quicksand', sans-serif;
     color: var(--text-dim);
-    font-size: 0.7rem;
+    font-size: 0.75rem;
+    font-weight: 600;
     margin-top: 2px;
 }
 
@@ -684,13 +647,14 @@ body {
 
 .app-footer {
     text-align: center;
-    font-size: 0.8rem;
-    color: var(--text-dim);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--text-muted);
     margin-top: 20px;
 }
 
 /* ==========================================================================
-   CalmTask v2 - スケジュール & タイムラインスタイル
+   CalmTask v2 - スケジュール & タイムラインスタイル (ネオブロータリズム版)
    ========================================================================== */
 
 .schedule-section {
@@ -704,17 +668,18 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    border-bottom: var(--neo-border-medium);
     padding-bottom: 12px;
 }
 
 .schedule-header h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
+    font-size: 1.2rem;
+    font-weight: 700;
 }
 
 .schedule-desc {
-    font-size: 0.82rem;
+    font-size: 0.9rem;
+    font-weight: 500;
     color: var(--text-muted);
 }
 
@@ -723,27 +688,28 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background: rgba(255, 255, 255, 0.01);
-    border: 1px solid rgba(255, 255, 255, 0.04);
+    background: #ffffff;
+    border: var(--neo-border-medium);
     padding: 16px;
     border-radius: 16px;
+    box-shadow: var(--neo-shadow-sm);
 }
 
 .schedule-form input {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #ffffff;
+    border: var(--neo-border-medium);
     border-radius: 10px;
     padding: 10px 14px;
-    color: white;
+    color: var(--text-primary);
     font-size: 0.9rem;
     font-family: inherit;
-    transition: var(--transition-smooth);
+    font-weight: 600;
+    transition: var(--transition-bounce);
 }
 
 .schedule-form input:focus {
     outline: none;
     border-color: var(--primary-color);
-    background: rgba(255, 255, 255, 0.06);
 }
 
 .time-picker-group {
@@ -754,14 +720,15 @@ body {
 
 .time-picker-group select {
     flex: 1;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #ffffff;
+    border: var(--neo-border-medium);
     border-radius: 10px;
     padding: 8px 12px;
-    color: white;
+    color: var(--text-primary);
     font-family: inherit;
+    font-weight: 600;
     cursor: pointer;
-    transition: var(--transition-smooth);
+    transition: var(--transition-bounce);
 }
 
 .time-picker-group select:focus {
@@ -777,21 +744,23 @@ body {
 }
 
 .preset-sched-btn {
-    background: rgba(255, 255, 255, 0.02);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: #ffffff;
+    border: var(--neo-border-medium);
     border-radius: 8px;
     padding: 6px 12px;
     font-size: 0.75rem;
-    color: var(--text-muted);
+    font-weight: 700;
+    color: var(--text-primary);
     cursor: pointer;
     font-family: inherit;
-    transition: var(--transition-smooth);
+    box-shadow: 2px 2px 0px var(--border-color);
+    transition: var(--transition-bounce);
 }
 
 .preset-sched-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.15);
-    color: white;
+    background: var(--color-blue);
+    transform: translate(-1px, -1px);
+    box-shadow: 3px 3px 0px var(--border-color);
 }
 
 /* タイムライン */
@@ -800,10 +769,10 @@ body {
     overflow-y: auto;
     padding-right: 4px;
     margin-top: 5px;
-    border-radius: 12px;
-    background: rgba(0, 0, 0, 0.15);
+    border-radius: 16px;
+    background: #fbfbf9;
     padding: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.02);
+    border: var(--neo-border-medium);
 }
 
 .timeline {
@@ -812,7 +781,7 @@ body {
     gap: 10px;
     position: relative;
     padding-left: 14px;
-    border-left: 2px solid rgba(255, 255, 255, 0.04);
+    border-left: 3px solid var(--border-color);
 }
 
 /* タイムラインアイテム */
@@ -823,29 +792,32 @@ body {
     padding: 10px 14px;
     border-radius: 12px;
     font-size: 0.85rem;
+    font-weight: 600;
     position: relative;
-    transition: var(--transition-smooth);
+    border: var(--neo-border-medium);
+    box-shadow: 2px 2px 0px var(--border-color);
+    transition: var(--transition-bounce);
 }
 
 .timeline-item::before {
     content: '';
     position: absolute;
-    left: -20px;
+    left: -21px;
     top: 50%;
     transform: translateY(-50%);
     width: 10px;
     height: 10px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.15);
-    border: 2px solid #080715;
+    background: #ffffff;
+    border: var(--neo-border-medium);
     z-index: 2;
-    transition: var(--transition-smooth);
+    transition: var(--transition-bounce);
 }
 
 .timeline-time {
-    font-family: 'Outfit', sans-serif;
-    font-weight: 600;
-    color: var(--text-dim);
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    color: var(--text-primary);
     min-width: 90px;
     font-size: 0.8rem;
     letter-spacing: 0.5px;
@@ -859,25 +831,24 @@ body {
 }
 
 .timeline-title {
-    font-weight: 500;
+    font-weight: 700;
 }
 
 /* 各スロットのタイプ */
 .slot-free {
-    background: rgba(56, 189, 248, 0.02);
-    border: 1px dashed rgba(56, 189, 248, 0.15);
-    color: #bae6fd;
+    background: #ffffff;
+    border: 2px dashed rgba(26, 26, 26, 0.4);
+    color: var(--text-muted);
+    box-shadow: none;
 }
 
 .slot-free::before {
-    background: var(--accent-color);
-    box-shadow: 0 0 6px rgba(56, 189, 248, 0.3);
+    background: #ffffff;
 }
 
 .slot-busy {
-    background: rgba(255, 255, 255, 0.015);
-    border: 1px solid rgba(255, 255, 255, 0.04);
-    color: var(--text-dim);
+    background: #eef2f7;
+    color: var(--text-muted);
 }
 
 .slot-busy::before {
@@ -885,35 +856,41 @@ body {
 }
 
 .slot-task {
-    background: rgba(99, 102, 241, 0.04);
-    border: 1px solid rgba(99, 102, 241, 0.2);
-    color: #c7d2fe;
+    background: #ffeef4;
+    color: var(--text-primary);
+    border-color: var(--border-color);
 }
 
 .slot-task::before {
-    background: var(--primary-color);
-    box-shadow: 0 0 10px var(--primary-glow);
+    background: var(--color-pink);
 }
 
 .delete-sched-btn {
-    background: none;
-    border: none;
-    color: var(--text-dim);
+    background: #ffffff;
+    border: var(--neo-border-medium);
+    border-radius: 4px;
+    color: var(--text-primary);
     cursor: pointer;
-    font-size: 0.85rem;
-    padding: 2px 6px;
-    transition: var(--transition-smooth);
+    font-size: 0.75rem;
+    font-weight: 700;
+    width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-bounce);
 }
 
 .delete-sched-btn:hover {
-    color: #f87171;
+    background: #f87171;
+    color: white;
 }
 
 /* メインエリアのグリッドレイアウト（タスク開始時に2カラム化） */
 @media (min-width: 768px) {
     .active-task-layout {
         display: grid;
-        grid-template-columns: 1.1fr 0.9fr !important;
+        grid-template-columns: 1.15fr 0.85fr !important;
         align-items: start;
         gap: 24px;
         max-width: 900px;
