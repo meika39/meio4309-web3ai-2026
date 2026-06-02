@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalmTask - 不安を減らす極小タスク管理</title>
+    <!-- Google Fonts: Outfit (English) & Noto Sans JP (Japanese) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- パーティクル演出用キャンバス -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- 背景の光の球 (オーブ) -->
+    <div class="background-orbs">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- ヘッダー -->
+        <header class="app-header">
+            <div class="logo">
+                <span class="logo-icon">✨</span>
+                <h1>CalmTask</h1>
+            </div>
+            <p class="subtitle">完璧を求めない。小さな一歩を、安心と共に。</p>
+        </header>
+
+        <!-- メインコンテンツ -->
+        <main class="app-main">
+            <!-- 進捗エリア -->
+            <section class="progress-section glass-panel">
+                <div class="progress-info">
+                    <span class="progress-label">今日の小さな達成</span>
+                    <span class="progress-percentage" id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="progressBar"></div>
+                </div>
+                <div class="progress-stats">
+                    <span id="completedCount">0</span> ステップ完了
+                </div>
+            </section>
+
+            <!-- タスク入力エリア -->
+            <section class="input-section glass-panel" id="inputPanel">
+                <h2>今日、不安に思っている「重いこと」は何ですか？</h2>
+                <p class="input-desc">「就活の準備をする」「課題をやる」など、何から手をつけていいか分からないことを書いてみてください。</p>
+                <div class="input-group">
+                    <input type="text" id="taskInput" placeholder="例: 課題のレポートを書く、就活の準備..." autocomplete="off">
+                    <button id="decomposeBtn" class="btn btn-primary">
+                        <span class="btn-icon">⚡</span>
+                        細分化して始める
+                    </button>
+                </div>
+                <div class="preset-suggestions">
+                    <span class="suggestion-label">よくある不安：</span>
+                    <button class="preset-btn" data-task="課題のレポートを書く">📝 課題レポート</button>
+                    <button class="preset-btn" data-task="就活の準備・企業研究">💼 就活の準備</button>
+                    <button class="preset-btn" data-task="散らかった部屋の掃除">🧹 部屋の片付け</button>
+                </div>
+            </section>
+
+            <!-- ワン・フォーカス画面 (メインカード) -->
+            <section class="focus-section glass-panel hidden" id="focusPanel">
+                <div class="focus-header">
+                    <span class="focus-tag" id="parentTaskTitle">元のタスク</span>
+                    <button id="resetAppBtn" class="btn-text">✕ 最初からやり直す</button>
+                </div>
+
+                <div class="focus-card">
+                    <span class="step-badge">今やること</span>
+                    <h2 class="current-step-text" id="currentStepText">パソコンの電源を入れて、デスクに座る</h2>
+                    <p class="step-subtext" id="currentStepDesc">まずはこれだけで完璧です。他のことは考えなくて大丈夫。</p>
+                </div>
+
+                <!-- プチタイマー -->
+                <div class="timer-container">
+                    <div class="timer-display" id="timerDisplay">10:00</div>
+                    <div class="timer-controls">
+                        <button id="timerToggleBtn" class="btn btn-secondary btn-sm">▶ スタート</button>
+                        <button id="timerResetBtn" class="btn-text btn-sm">リセット</button>
+                    </div>
+                </div>
+
+                <!-- アクションエリア -->
+                <div class="action-area">
+                    <button id="supportBtn" class="btn btn-outline">
+                        <span class="btn-icon">🌱</span>
+                        今はちょっと無理かも...
+                    </button>
+                    <button id="completeBtn" class="btn btn-success">
+                        <span class="btn-icon">✓</span>
+                        できた！
+                    </button>
+                </div>
+
+                <!-- ゆるメッセージ表示 -->
+                <div class="support-message-box hidden" id="supportMessageBox">
+                    <p id="supportMessageText">大丈夫です。ゆっくり深呼吸を1回しましょう。それだけで十分素晴らしい一歩です。</p>
+                    <button id="easyActionBtn" class="btn btn-accent btn-sm">もっと簡単なアクションにする</button>
+                </div>
+            </section>
+
+            <!-- 次のステッププレビュー / 履歴 -->
+            <div class="details-row">
+                <section class="steps-preview-section glass-panel hidden" id="previewPanel">
+                    <h3>細分化されたロードマップ</h3>
+                    <ul class="steps-list" id="stepsList">
+                        <!-- 動的に追加 -->
+                    </ul>
+                </section>
+
+                <section class="history-section glass-panel hidden" id="historyPanel">
+                    <h3>今日のあゆみ</h3>
+                    <ul class="history-list" id="historyList">
+                        <!-- 動的に追加 -->
+                    </ul>
+                </section>
+            </div>
+        </main>
+
+        <!-- フッター -->
+        <footer class="app-footer">
+            <p>© 2026 CalmTask — Designed with Care for meio4309</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
