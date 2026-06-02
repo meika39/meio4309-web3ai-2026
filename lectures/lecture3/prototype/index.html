@@ -107,6 +107,75 @@
                 </div>
             </section>
 
+            <!-- スケジュール連携・タイムラインセクション -->
+            <section class="schedule-section glass-panel hidden" id="schedulePanel">
+                <div class="schedule-header">
+                    <h3>📅 今日のタイムスロット</h3>
+                    <button id="autoAssignBtn" class="btn-text">⚡ タスクを自動配分</button>
+                </div>
+                <p class="schedule-desc">授業やバイトなどの予定を入れて、空き時間にタスクを割り振ります。</p>
+
+                <!-- 予定追加フォーム -->
+                <div class="schedule-form">
+                    <input type="text" id="schedTitle" placeholder="予定名 (例: 授業、バイト)" autocomplete="off">
+                    <div class="time-picker-group">
+                        <select id="schedStart">
+                            <option value="8">08:00</option>
+                            <option value="9">09:00</option>
+                            <option value="10">10:00</option>
+                            <option value="11" selected>11:00</option>
+                            <option value="12">12:00</option>
+                            <option value="13">13:00</option>
+                            <option value="14">14:00</option>
+                            <option value="15">15:00</option>
+                            <option value="16">16:00</option>
+                            <option value="17">17:00</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00</option>
+                            <option value="20">20:00</option>
+                            <option value="21">21:00</option>
+                            <option value="22">22:00</option>
+                            <option value="23">23:00</option>
+                        </select>
+                        <span>〜</span>
+                        <select id="schedEnd">
+                            <option value="9">09:00</option>
+                            <option value="10">10:00</option>
+                            <option value="11">11:00</option>
+                            <option value="12" selected>12:00</option>
+                            <option value="13">13:00</option>
+                            <option value="14">14:00</option>
+                            <option value="15">15:00</option>
+                            <option value="16">16:00</option>
+                            <option value="17">17:00</option>
+                            <option value="18">18:00</option>
+                            <option value="19">19:00</option>
+                            <option value="20">20:00</option>
+                            <option value="21">21:00</option>
+                            <option value="22">22:00</option>
+                            <option value="23">23:00</option>
+                            <option value="24">24:00</option>
+                        </select>
+                    </div>
+                    <button id="addSchedBtn" class="btn btn-secondary btn-sm">追加</button>
+                </div>
+
+                <!-- 予定のプリセット -->
+                <div class="preset-suggestions sched-presets">
+                    <button class="preset-sched-btn" data-title="🏫 大学の授業" data-start="9" data-end="12">🏫 授業</button>
+                    <button class="preset-sched-btn" data-title="💼 アルバイト" data-start="17" data-end="21">💼 バイト</button>
+                    <button class="preset-sched-btn" data-title="🍽 お昼ご飯" data-start="12" data-end="13">🍽 ランチ</button>
+                    <button class="preset-sched-btn" data-title="💤 仮眠・休憩" data-start="15" data-end="16">💤 休憩</button>
+                </div>
+
+                <!-- 縦型タイムライン -->
+                <div class="timeline-container">
+                    <div class="timeline" id="timelineList">
+                        <!-- スクリプトから動的にタイムスロットを描画 -->
+                    </div>
+                </div>
+            </section>
+
             <!-- 次のステッププレビュー / 履歴 -->
             <div class="details-row">
                 <section class="steps-preview-section glass-panel hidden" id="previewPanel">

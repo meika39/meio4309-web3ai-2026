@@ -16,6 +16,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let timerDuration = 600; // 10分 (秒)
     let isTimerRunning = false;
 
+    // スケジュール状態管理 (初期予定: 12:00〜13:00 お昼ご飯)
+    let schedules = [
+        { title: "🍽 お昼ご飯", start: 12, end: 13 }
+    ];
+    let assignedTasks = {}; // slotIndex: stepIndex
+
     // ----------------------------------------------------------------------
     // 2. DOM要素の取得
     // ----------------------------------------------------------------------
@@ -49,6 +55,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const stepsList = document.getElementById('stepsList');
     const historyList = document.getElementById('historyList');
     const resetAppBtn = document.getElementById('resetAppBtn');
+
+    // スケジュール用DOM要素
+    const schedulePanel = document.getElementById('schedulePanel');
+    const timelineList = document.getElementById('timelineList');
+    const addSchedBtn = document.getElementById('addSchedBtn');
+    const schedTitleInput = document.getElementById('schedTitle');
+    const schedStartSelect = document.getElementById('schedStart');
+    const schedEndSelect = document.getElementById('schedEnd');
+    const autoAssignBtn = document.getElementById('autoAssignBtn');
+    const presetSchedBtns = document.querySelectorAll('.preset-sched-btn');
 
     // ----------------------------------------------------------------------
     // 3. 細分化プリセットデータ
@@ -264,9 +280,11 @@ document.addEventListener('DOMContentLoaded', () => {
         currentIndex = 0;
         history = [];
         
-        // パネル切り替え
+        // パネル切り替えと2カラムグリッド配置
+        document.querySelector('.app-main').classList.add('active-task-layout');
         inputPanel.classList.add('hidden');
         focusPanel.classList.remove('hidden');
+        schedulePanel.classList.remove('hidden');
         previewPanel.classList.remove('hidden');
         historyPanel.classList.remove('hidden');
         
@@ -276,6 +294,9 @@ document.addEventListener('DOMContentLoaded', () => {
         renderRoadmap();
         renderHistory();
         updateProgress();
+        
+        // タイムライン描画と自動配分
+        autoAssignTasks();
         
         // タイマーリセット
         resetTimer();
@@ -412,6 +433,9 @@ document.addEventListener('DOMContentLoaded', () => {
         renderRoadmap();
         renderHistory();
         updateProgress();
+        
+        // スケジュール内のタスク進行状況も連動更新
+        autoAssignTasks();
     });
 
     // 今は無理かも...（ゆるサポート）
@@ -462,8 +486,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // 最初からやり直す
     resetAppBtn.addEventListener('click', () => {
         stopTimer();
+        document.querySelector('.app-main').classList.remove('active-task-layout');
         inputPanel.classList.remove('hidden');
         focusPanel.classList.add('hidden');
+        schedulePanel.classList.add('hidden');
         previewPanel.classList.add('hidden');
         historyPanel.classList.add('hidden');
         taskInput.value = "";
@@ -529,5 +555,154 @@ document.addEventListener('DOMContentLoaded', () => {
 
     timerResetBtn.addEventListener('click', () => {
         resetTimer();
+    });
+
+    // ----------------------------------------------------------------------
+    // 9. スケジュール＆タイムスロット連携機能 (CalmTask v2)
+    // ----------------------------------------------------------------------
+    
+    // スケジュール自動配分アルゴリズム
+    function autoAssignTasks() {
+        assignedTasks = {};
+        let stepIdx = currentIndex;
+        
+        // 08:00〜24:00 (16時間枠、インデックス0が08:00)
+        for (let slot = 0; slot < 16; slot++) {
+            const hour = slot + 8;
+            
+            // この時間枠が固定予定と重なっているか
+            const isBusy = schedules.some(s => hour >= s.start && hour < s.end);
+            if (!isBusy) {
+                // 空き時間があれば未完了のステップを配分
+                if (stepIdx < steps.length) {
+                    assignedTasks[slot] = stepIdx;
+                    stepIdx++;
+                }
+            }
+        }
+        renderTimeline();
+    }
+
+    // タイムラインのレンダリング
+    function renderTimeline() {
+        timelineList.innerHTML = '';
+        
+        for (let slot = 0; slot < 16; slot++) {
+            const startHour = slot + 8;
+            const endHour = startHour + 1;
+            const startStr = `${startHour.toString().padStart(2, '0')}:00`;
+            const endStr = `${endHour.toString().padStart(2, '0')}:00`;
+            
+            // 固定予定があるかチェック
+            const busySchedIdx = schedules.findIndex(s => startHour >= s.start && startHour < s.end);
+            
+            const item = document.createElement('div');
+            item.className = 'timeline-item';
+            
+            if (busySchedIdx !== -1) {
+                // 固定予定スロット
+                const sched = schedules[busySchedIdx];
+                item.classList.add('slot-busy');
+                
+                const isFirstHour = startHour === sched.start;
+                const deleteBtnHtml = isFirstHour 
+                    ? `<button class="delete-sched-btn" data-index="${busySchedIdx}">✕</button>` 
+                    : '';
+                
+                item.innerHTML = `
+                    <div class="timeline-time">${startStr} - ${endStr}</div>
+                    <div class="timeline-content">
+                        <span class="timeline-title">${sched.title}</span>
+                        ${deleteBtnHtml}
+                    </div>
+                `;
+            } else if (assignedTasks[slot] !== undefined) {
+                // タスク配分スロット
+                const stepIndex = assignedTasks[slot];
+                const step = steps[stepIndex];
+                item.classList.add('slot-task');
+                
+                const isCompleted = stepIndex < currentIndex;
+                const statusIcon = isCompleted ? '✓' : '🎯';
+                const textStyle = isCompleted ? 'text-decoration: line-through; opacity: 0.5;' : '';
+                
+                item.innerHTML = `
+                    <div class="timeline-time">${startStr} - ${endStr}</div>
+                    <div class="timeline-content" style="${textStyle}">
+                        <span class="timeline-title">${statusIcon} ${step.text}</span>
+                        <span style="font-size: 0.72rem; color: var(--text-dim); margin-left: 6px;">(極小)</span>
+                    </div>
+                `;
+            } else {
+                // 空き時間スロット
+                item.classList.add('slot-free');
+                item.innerHTML = `
+                    <div class="timeline-time">${startStr} - ${endStr}</div>
+                    <div class="timeline-content">
+                        <span class="timeline-title" style="font-style: italic; opacity: 0.65;">✨ 空き時間（タスク可能）</span>
+                    </div>
+                `;
+            }
+            
+            timelineList.appendChild(item);
+        }
+        
+        // 予定の削除ボタンにリスナーを設定
+        document.querySelectorAll('.delete-sched-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const idx = parseInt(e.target.getAttribute('data-index'));
+                schedules.splice(idx, 1);
+                autoAssignTasks();
+            });
+        });
+    }
+
+    // 新規予定の追加
+    function addSchedule(title, start, end) {
+        if (!title) return;
+        if (start >= end) {
+            alert("終了時間は開始時間より後に設定してください。");
+            return;
+        }
+        
+        // 重複チェック
+        const hasOverlap = schedules.some(s => {
+            return (start < s.end && end > s.start);
+        });
+        
+        if (hasOverlap) {
+            alert("他の予定と重なっています。時間を調整してください。");
+            return;
+        }
+        
+        schedules.push({ title, start, end });
+        schedules.sort((a, b) => a.start - b.start);
+        
+        schedTitleInput.value = '';
+        autoAssignTasks();
+    }
+
+    // 予定の追加ボタン
+    addSchedBtn.addEventListener('click', () => {
+        const title = schedTitleInput.value.trim();
+        const start = parseInt(schedStartSelect.value);
+        const end = parseInt(schedEndSelect.value);
+        addSchedule(title, start, end);
+    });
+
+    // 予定のプリセットボタン
+    presetSchedBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const title = btn.getAttribute('data-title');
+            const start = parseInt(btn.getAttribute('data-start'));
+            const end = parseInt(btn.getAttribute('data-end'));
+            addSchedule(title, start, end);
+        });
+    });
+
+    // タスクを自動配分ボタン
+    autoAssignBtn.addEventListener('click', () => {
+        autoAssignTasks();
+        playRelaxSound();
     });
 });
